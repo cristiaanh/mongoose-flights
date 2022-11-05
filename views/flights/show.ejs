@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+ <table class="table">
+    <tr>
+        <th>Airline</th>
+        <td><%= flight.airline %></td>
+    </tr>
+    <tr>
+        <th>Airport</th>
+        <td><%= flight.airport %></td>
+    </tr>
+    <tr>
+        <th>Flight Number</th>
+        <td><%= flight.flightNO %></td>
+    </tr>
+    <tr>
+        <th>Departure Date</th>
+        <td><%= flight.departs %></td>
+    </tr>
+    <tr>
+        <th>Destinations</th>
+        <% if (flight.destinations.length) { %>
+           <% flight.destinations.forEach(function(dest) { %>
+                <td><%= dest.airport %>, <%= dest.arrival %></td>
+           <% }) %>
+        <% } else { %>
+            <td>Add a destination below</td>
+        <% }%>
+    </tr>
+    <tr>
+        <th>Tickets</th>
+        <% if (tickets.length) { %>
+            <% tickets.forEach(function(ticket){ %>
+                <td><%= ticket.seat %>, $<%= ticket.price %></td>
+           <% }) %> 
+            
+        <% } else { %>
+            <td>No Tickets Available</td>
+        <% } %>
+    </tr>
+ </table>
+<section>
+    <h3>Add a Destination</h3>
+    <form action="/flights/<%= flight._id %>/destinations" 
+        method="POST">
+        <label>Arriving at: 
+            <select name="airport">
+                <option value="" disabled selected hidden>Select Airport</option>
+                <% let airports = ['AUS', 'DFW', 'DEN', 'LAX', 'SAN']; %>
+                <% let idx = airports.indexOf(flight.airport); %>
+                <% airports.splice(idx, 1); %>
+                <% airports.forEach(function(airport) { %>
+                    <option value="<%= airport %>"><%= airport %></option>
+                <% }); %>
+            </select>
+        </label> On 
+        <input type="text" 
+        name="arrival" 
+        placeholder="<%= new Date(new Date().setFullYear(new Date().getFullYear() + 1)) %>"
+        onfocus="(this.type='datetime-local')"
+        ><br>
+        <button type="submit">Add Destination</button>
+    </form>
+</section>
+<div>
+    <a href="/flights/<%= flight._id %>/tickets/new">Add Ticket</a>
+</div>
+<%- include('../partials/footer') %> 
